@@ -3,6 +3,7 @@ package com.formationjuniorisep.snake;
 import org.newdawn.slick.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Game extends BasicGame {
 
@@ -18,6 +19,8 @@ public class Game extends BasicGame {
 
     int targetX;
     int targetY;
+
+    int nbreOfSquares;
 
     ArrayList listPosition = new ArrayList();
 
@@ -38,6 +41,8 @@ public class Game extends BasicGame {
 
         targetX = 100;
         targetY = 100;
+
+        nbreOfSquares = 1;
     }
 
     @Override
@@ -45,6 +50,7 @@ public class Game extends BasicGame {
 
         Input input = gameContainer.getInput();
         //Position position = new Position();
+        Random random = new Random();
 
         // user's input
         if (input.isKeyDown(Input.KEY_UP)){
@@ -68,18 +74,22 @@ public class Game extends BasicGame {
         snakeY += speedY;
 
         // if the snake touches the screen the user looses
-        if (snakeX <= 0 || snakeY<=0 || snakeX>=1160 || snakeY>= 760 ){
+        if (snakeX <= 0 || snakeY<=0 || snakeX>=1200 || snakeY>= 800 ){
             lost = 1;
         }
 
         // if the snake touche an apple
-        if (((snakeX>= targetX -40) && (snakeX<= targetX +40)) && ((snakeY>= targetY -40) || (snakeY<= targetY +40)) ){
+        if (((snakeX>= targetX -40) && (snakeX<= targetX +40)) && ((snakeY>= targetY -40) && (snakeY<= targetY +40)) ){
             //position = new Position(snakeX+20, snakeY+20);
             snakeX = targetX;
             snakeY = targetY;
+            targetX = random.nextInt((1150 - 50) + 1) + 50;
+            targetX = random.nextInt((750 - 50) + 1) + 50;
             //listPosition.add(position);
             score+=1;
+            nbreOfSquares = score + 1;
         }
+
 
 
 
@@ -91,10 +101,13 @@ public class Game extends BasicGame {
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
 
         if (lost == 0){
-            graphics.drawString("Score: " + score, 0, 1100);
+            graphics.drawString("Score: " + score, 1100, 0);
 
-            //snake
-            graphics.fillRect(snakeX + 20, snakeY + 20, 40, 40 );
+            //snake +
+            for (int it = 0; it<nbreOfSquares; it++){
+                graphics.fillRect(snakeX + 20 + it*40, snakeY + 10, 40, 40 );
+            }
+
 
             //target
             graphics.fillRect(targetX + 20, targetY + 20, 40, 40 );
